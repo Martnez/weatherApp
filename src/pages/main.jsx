@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
-import cloud from "../Images/icons8-sun-100.png";
 import sun from "../Images/icons8-sun-48.png";
 import Humidity from "../Images/icons8-humidity-64.png";
 import Wind from "../Images/icons8-wind-65.png";
 import Clouds from "../Images/icons8-clouds-100.png";
-import { Image } from "../components/Input";
 import { Images } from "../components/Input";
 import { Input } from "../components/Input";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCloudSunRain } from "@fortawesome/free-solid-svg-icons";
+import { faThermometerThreeQuarters } from "@fortawesome/free-solid-svg-icons";
+import ReactApexChart from "react-apexcharts";
+
 const Main = () => {
   const [latitude, setLatitude] = useState(-1.286389);
   const [longitude, setLongitude] = useState(36.817223);
@@ -42,91 +45,293 @@ const Main = () => {
   if (curHr < 18) {
     greetings = "Good afternoon";
   }
+  const labels = [
+    "6am",
+    "7am",
+    "8am",
+    "9am",
+    "10am",
+    "11am",
+    "12noon",
+    "1pm",
+    "2pm",
+    "3pm",
+    "4pm",
+    "5pm",
+    "6pm",
+  ];
+
+  const HumidityWind = {
+    series: [
+      {
+        name: "Wind Speed",
+        type: "area",
+        data: day_windspeed,
+      },
+      {
+        name: "Humidity",
+        type: "line",
+        data: day_relativehumidity,
+      },
+    ],
+    options: {
+      chart: {
+        height: "auto",
+        type: "line",
+        stacked: false,
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        width: [1, 4],
+      },
+      xaxis: {
+        categories: labels,
+      },
+      yaxis: [
+        {
+          axisTicks: {
+            show: true,
+          },
+          axisBorder: {
+            show: true,
+            color: "#008FFB",
+          },
+          labels: {
+            style: {
+              colors: "#008FFB",
+            },
+          },
+          title: {
+            text: "Wind Speed",
+            style: {
+              color: "#008FFB",
+            },
+          },
+          tooltip: {
+            enabled: true,
+          },
+        },
+        {
+          seriesName: "Day Humidity",
+          opposite: true,
+          axisTicks: {
+            show: true,
+          },
+          axisBorder: {
+            show: true,
+            color: "#00E396",
+          },
+          labels: {
+            style: {
+              colors: "#00E396",
+            },
+          },
+          title: {
+            text: "Day Humidity",
+            style: {
+              color: "#00E396",
+            },
+          },
+        },
+      ],
+      tooltip: {
+        fixed: {
+          enabled: true,
+          position: "topLeft", // topRight, topLeft, bottomRight, bottomLeft
+          offsetY: 30,
+          offsetX: 60,
+        },
+      },
+      legend: {
+        horizontalAlign: "left",
+        offsetX: 40,
+      },
+    },
+  };
+  const tempCloud = {
+    series: [
+      {
+        name: "Temparature",
+        type: "column",
+        data: day_temperature_2m,
+      },
+      {
+        name: "Cloud Cover",
+        type: "line",
+        data: day_cloudcover,
+      },
+    ],
+    options: {
+      chart: {
+        height: "auto",
+        type: "line",
+        stacked: false,
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        width: [0, 4],
+      },
+      xaxis: {
+        categories: labels,
+      },
+      yaxis: [
+        {
+          axisTicks: {
+            show: true,
+          },
+          axisBorder: {
+            show: true,
+            color: "#008FFB",
+          },
+          labels: {
+            style: {
+              colors: "#008FFB",
+            },
+          },
+          title: {
+            text: "Temparature",
+            style: {
+              color: "#008FFB",
+            },
+          },
+          tooltip: {
+            enabled: true,
+          },
+        },
+        {
+          seriesName: "Cloud Cover",
+          opposite: true,
+          axisTicks: {
+            show: true,
+          },
+          axisBorder: {
+            show: true,
+            color: "#00E396",
+          },
+          labels: {
+            style: {
+              colors: "#00E396",
+            },
+          },
+          title: {
+            text: "Cloud Cover",
+            style: {
+              color: "#00E396",
+            },
+          },
+        },
+      ],
+      tooltip: {
+        fixed: {
+          enabled: true,
+          position: "topLeft", // topRight, topLeft, bottomRight, bottomLeft
+          offsetY: 30,
+          offsetX: 60,
+        },
+      },
+      legend: {
+        horizontalAlign: "left",
+        offsetX: 40,
+      },
+    },
+  };
+
   return (
     <div className="container">
-      <div
-        className="main"
-        style={{
-          height: "100vh",
-          backgroundImage: `url("https://picsum.photos/id/1015/1000/1000/?blur=2")`,
-          backgroundRepeat: "no-repeat",
-        }}
-      >
-        <div className="header">
-          <div className="brand">
-            <h1 style={{ cursor: "pointer" }}>Cyweather</h1>
+      <div className="main">
+        <div className="main-nav">
+          <div className="logo">
+            <h1 className="logo-text">
+              Cy-<span>Weather</span>
+            </h1>
           </div>
-
-          <h4>{greetings}</h4>
-          <Image name={cloud} height={"4rem"} width={"4rem"} />
+          <ul className="nav-lists">
+            <li className="nav-list">
+              <a href="" className="nav-link active">
+                Home
+              </a>
+            </li>
+            <li className="nav-list">
+              <a href="" className="nav-link">
+                About
+              </a>
+            </li>
+          </ul>
         </div>
-        <div className="inputSection">
-          <label htmlFor="latitude">Latitude</label>
-          <Input value={latitude} name="latitude" onChange={setLatitude} />
-
-          <label htmlFor="longitude"> Longitude</label>
-          <Input value={longitude} name="longitude" onChange={setLongitude} />
-        </div>
-        <div className="table-section">
-          <table>
-            <tr>
-              <th>Name</th>
-              <th>6 am</th>
-              <th>7 am</th>
-              <th>8 am</th>
-              <th>9 am</th>
-              <th>10 am</th>
-              <th>11 am</th>
-              <th>12 am</th>
-              <th> 1 pm</th>
-              <th>2 pm</th>
-              <th>3 pm</th>
-              <th>4 pm</th>
-              <th>5 pam</th>
-              <th>6 pm</th>
-            </tr>
-            <tr>
-              <td>
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <h4>temp Celcius</h4>
-                  <Images name={sun} />
-                </div>
-              </td>
-              {day_temperature_2m.map((temp, index) => {
-                return <td key={index}>{temp} </td>;
-              })}
-            </tr>
-            <tr>
-              <td>
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <h4>Wind Km/h</h4> <Images name={Wind} />
-                </div>
-              </td>
-              {day_windspeed.map((wind, index) => {
-                return <td key={index}>{wind}</td>;
-              })}
-            </tr>
-            <tr>
-              <td>
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <h4>Cloud Cover % coverage</h4> <Images name={Clouds} />
-                </div>
-              </td>
-              {day_cloudcover.map((cloudcover, index) => {
-                return <td key={index}>{cloudcover}</td>;
-              })}
-            </tr>
-            <tr>
-              <td>
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <h4>Humidity %relativity </h4> <Images name={Humidity} />
-                </div>
-              </td>
-              {day_relativehumidity.map((relativehumidity, index) => {
-                return <td key={index}>{relativehumidity}</td>;
-              })}
-            </tr>
-          </table>
+        <div className="content-sections">
+          <div className="content-col inputs">
+            <h1 className="inputs-header">
+              The Only Weather Forecast You Need
+              <span></span>
+            </h1>
+            <div className="location-section">
+              <div className="location-group">
+                <label htmlFor="" className="location-label">
+                  Longitude
+                </label>
+                <Input
+                  value={longitude}
+                  name="longitude"
+                  onChange={setLongitude}
+                />
+              </div>
+              <div className="location-group">
+                <label htmlFor="" className="location-label">
+                  Latitude
+                </label>
+                <Input
+                  value={latitude}
+                  name="latitude"
+                  onChange={setLatitude}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="content-col">
+            <div className="header-panel">
+              <div className="header-brand">
+                <h1 className="greeting">
+                  {greetings}
+                  <span>
+                    <FontAwesomeIcon icon={faCloudSunRain} />
+                  </span>
+                </h1>
+                <p className="header-text">
+                  Get the latest weather updates timely and efficiently with
+                  CyWeather Systems.
+                </p>
+                <p className="powered">
+                  Powered by <span>Cytonn</span>
+                </p>
+              </div>
+            </div>
+            <div className="charts">
+              <div className="chart-info">
+                <h2 className="chart-title">Temparature &amp; Cloud Cover</h2>
+                <ReactApexChart
+                  series={tempCloud.series}
+                  options={tempCloud.options}
+                  type="line"
+                  height={350}
+                  className="temp-chart"
+                />
+              </div>
+              <div className="chart-info">
+                <h2 className="chart-title">Humidity &amp; Wind Speed</h2>
+                <ReactApexChart
+                  series={HumidityWind.series}
+                  options={HumidityWind.options}
+                  type="line"
+                  height={350}
+                  className="temp-chart"
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
