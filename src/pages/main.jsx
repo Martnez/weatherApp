@@ -38,13 +38,14 @@ const Main = () => {
   const day_temperature_2m = data.hourly.temperature_2m.slice(6, 19);
   var today = new Date();
   var curHr = today.getHours();
-  let greetings = "Good evening";
-  if (curHr < 12) {
-    greetings = "Good morning";
-  }
-  if (curHr < 18) {
-    greetings = "Good afternoon";
-  }
+  let greetings = "Hello";
+    if (curHr < 12) {
+        greetings ='good morning'
+    } else if (curHr < 18) {
+        greetings ='good afternoon'
+    } else {
+        greetings ='good evening'
+    }
   const labels = [
     "6am",
     "7am",
