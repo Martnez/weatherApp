@@ -1,18 +1,18 @@
-import PropTypes from "prop-types"
-const Input = ({ value, name,onChange }) => (
+import PropTypes from "prop-types";
+const Input = ({ value, name, onChange }) => (
   <input
     value={value}
     type="text"
-    className="input"
+    className="location-input"
     name={name}
     onChange={(event) => onChange(event.target.value)}
   />
 );
-Input.propTypes={
-    name:PropTypes.string,
-    value:PropTypes.string,
-    onChange:PropTypes.func
-}
+Input.propTypes = {
+  name: PropTypes.string,
+  value: PropTypes.string,
+  onChange: PropTypes.func,
+};
 const Image = ({ name, width, height }) => (
   <img
     src={name}
@@ -25,11 +25,11 @@ const Image = ({ name, width, height }) => (
     }}
   />
 );
-Image.propTypes={
-    name:PropTypes.string,
-    width:PropTypes.string,
-    height:PropTypes.string
-}
+Image.propTypes = {
+  name: PropTypes.string,
+  width: PropTypes.string,
+  height: PropTypes.string,
+};
 const Images = ({ name }) => (
   <img
     src={name}
@@ -42,7 +42,7 @@ const Images = ({ name }) => (
     }}
   />
 );
-Images.propTypes={
-    name:PropTypes.string
-}
-export { Image, Images,Input };
+Images.propTypes = {
+  name: PropTypes.string,
+};
+export { Image, Images, Input };
